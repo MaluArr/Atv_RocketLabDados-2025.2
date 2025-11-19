@@ -1,0 +1,31 @@
+name: brazilian_ecommerce_medalhao_job
+
+schedule:
+  quartz_cron_expression: "0 0 13 * * ?"
+  timezone_id: "America/Sao_Paulo"
+  pause_status: "UNPAUSED"
+
+existing_cluster_id: " a96964933acbafb9"
+
+tasks:
+  - task_key: bronze
+    description: "Processa a camada Bronze (ingestão e tratamento inicial)."
+    notebook_task:
+      notebook_path: "/Workspace/Users/mlva2@cesar.school/Brazilian E-Commerce Bronze"
+    existing_cluster_id: " a96964933acbafb9"
+
+  - task_key: silver
+    description: "Processa a camada Silver (padronização e enriquecimento)."
+    depends_on:
+      - task_key: bronze
+    notebook_task:
+      notebook_path: "/Workspace/Users/mlva2@cesar.school/Brazilian E-Commerce Silver"
+    existing_cluster_id: " a96964933acbafb9"
+
+  - task_key: gold
+    description: "Processa a camada Gold (tabelas e views analíticas)."
+    depends_on:
+      - task_key: silver
+    notebook_task:
+      notebook_path: "/Workspace/Users/mlva2@cesar.school/Brazilian E-Commerce Gold"
+    existing_cluster_id: " a96964933acbafb9"
